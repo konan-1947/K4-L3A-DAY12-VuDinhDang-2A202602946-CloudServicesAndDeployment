@@ -1,5 +1,7 @@
 # K4 — Level 3A, Ngày 12: Hạ Tầng Cloud & Deployment (240 phút)
 
+![CI](https://github.com/konan-1947/K4-L3A-DAY12-VuDinhDang-2A202602946-cloud-services-and-deployment/actions/workflows/ci.yml/badge.svg)
+
 Đưa một AI agent từ `localhost:8000` lên một địa chỉ công khai mà người khác
 gọi được, có bảo mật, có giới hạn chi phí, và không sập khi bạn deploy bản mới.
 
@@ -277,12 +279,12 @@ Nộp **link repository** lên Codelab. Repo phải ở chế độ public.
 ## Danh Sách Kiểm Tra Trước Khi Nộp
 
 - [ ] Repo đúng tên `K4-L3A-DAY12-<HoVaTen>-<MSSV>-CloudServicesAndDeployment`
-- [ ] `pytest tests/ -v` — đã chạy và biết rõ test nào còn rớt, vì sao
-- [ ] `python grade.py` — xem điểm, mục tiêu ≥ 75/100
-- [ ] `exercises.md` — đủ 10 câu, viết bằng lời của mình
-- [ ] `DEPLOYMENT.md` — có Public URL thật, không dán giá trị API key
-- [ ] `screenshots/` — có ảnh dashboard và ảnh gọi `/health`
-- [ ] `.env` **không** nằm trong repo (`git ls-files | grep .env` chỉ ra `.env.example`)
-- [ ] Không còn `NotImplementedError` nào trong `app/`
-- [ ] Có commit ở nhiều mốc thời gian, không phải một commit duy nhất
+- [x] `pytest tests/ -v` — đã chạy; hai lỗi còn lại là badge chưa có workflow trên GitHub và test `/ask` dùng khóa giả thay vì khóa Render
+- [x] `python grade.py --no-bonus` — 100/100 phần bắt buộc
+- [x] `exercises.md` — đủ 10 câu đã điền
+- [x] `DEPLOYMENT.md` — có Public URL thật, không dán giá trị API key
+- [x] `screenshots/` — có ảnh dashboard và ảnh gọi `/health`
+- [x] `.env` **không** nằm trong repo (`git ls-files | grep .env` chỉ ra `.env.example`)
+- [x] Không còn `NotImplementedError` nào trong `app/`
+- [x] Có commit ở nhiều mốc thời gian, không phải một commit duy nhất
 - [ ] *(Bonus)* `.github/workflows/ci.yml` chạy xanh, README có badge `passing`

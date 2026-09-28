@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test — pytest trên máy sạch
+    runs-on: ubuntu-latest
+    env:
+      AGENT_API_KEY: ci-dummy
+      REDIS_URL: "fake://"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Cài dependency
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Chạy pytest
+        run: pytest tests/ -v --ignore=tests/test_cp5.py --ignore=tests/test_bonus_cicd.py -m "not docker"
+
+  build:
+    name: Build — docker image trên máy sạch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t day12-agent:ci .
+
+      - name: Smoke test container
+        run: |
+          docker run -d --name agent-ci -p 8000:8000 \
+            -e AGENT_API_KEY=ci-dummy \
+            -e REDIS_URL="fake://" \
+            -e PORT=8000 \
+            day12-agent:ci
+          sleep 10
+          curl -fsS http://localhost:8000/health
+          docker rm -f agent-ci
+
+  deploy:
+    name: Deploy — Render
+    needs: [test, build]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kích hoạt Render Deploy Hook
+        run: |
+          curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+
+      - name: Smoke test bản vừa deploy
+        run: |
+          sleep 45
+          curl -fsS "${{ vars.PUBLIC_URL }}/health"
